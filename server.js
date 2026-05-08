@@ -7,6 +7,10 @@ const cors = require("cors");
 
 const app = express();
 
+app.get("/", (req, res) => {
+  res.send("Discord Stripe Bot Running");
+});
+
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 app.use(cors());
