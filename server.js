@@ -333,7 +333,85 @@ app.get("/discord/callback", async (req, res) => {
       );
     }
 
-    res.send("Discord connected successfully. Roles assigned. You can close this tab.");
+    // Success — show a welcome page that auto-redirects to Discord
+    const discordUrl = `https://discord.com/channels/${process.env.DISCORD_GUILD_ID}`;
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>You're in!</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta http-equiv="refresh" content="2;url=${discordUrl}">
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              background: linear-gradient(135deg, #1e1f22 0%, #2b2d31 100%);
+              color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              text-align: center;
+              padding: 1rem;
+            }
+            .box {
+              max-width: 480px;
+              padding: 2.5rem 2rem;
+              background: rgba(0,0,0,0.25);
+              border-radius: 16px;
+              border: 1px solid rgba(255,255,255,0.08);
+            }
+            .check {
+              width: 64px;
+              height: 64px;
+              margin: 0 auto 1.25rem;
+              border-radius: 50%;
+              background: #5865f2;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+            }
+            h1 {
+              font-size: 1.75rem;
+              margin: 0 0 0.5rem 0;
+              font-weight: 700;
+            }
+            p {
+              opacity: 0.75;
+              line-height: 1.5;
+              margin: 0.5rem 0;
+            }
+            .link {
+              display: inline-block;
+              margin-top: 1rem;
+              padding: 0.75rem 1.5rem;
+              background: #5865f2;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 8px;
+              font-weight: 600;
+              transition: background 0.15s;
+            }
+            .link:hover { background: #4752c4; }
+            .small { font-size: 0.85rem; opacity: 0.55; margin-top: 1.25rem; }
+          </style>
+        </head>
+        <body>
+          <div class="box">
+            <div class="check">✓</div>
+            <h1>You're in!</h1>
+            <p>Your Discord roles have been assigned.</p>
+            <p>Opening Discord in a moment…</p>
+            <a class="link" href="${discordUrl}">Open Discord now</a>
+            <p class="small">If nothing happens, click the button above.</p>
+          </div>
+        </body>
+      </html>
+    `);
   } catch (err) {
     console.error("Callback error:", err.response?.data || err.message);
     res
